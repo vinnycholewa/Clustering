@@ -1,0 +1,33 @@
+import codecademylib3_seaborn
+from sklearn.datasets import load_breast_cancer
+from sklearn.neighbors import KNeighborsClassifier as knc
+from sklearn.model_selection import train_test_split as tts
+import matplotlib.pyplot as plt
+bcd= load_breast_cancer()
+
+#overview of breast cancer data
+#print(bcd.data[0])
+#print(bcd.feature_names)
+#print(bcd.target)
+#print(bcd.target_names)
+
+#create training & validation data
+training_data, validation_data, training_labels, validation_labels =(tts(bcd.data, bcd.target,test_size=0.2,random_state=100))
+
+#optimize k
+accuracies = []
+for k in range(1,101):
+  classifier = knc(n_neighbors = k)
+  #fit model using training data
+  classifier.fit(training_data, 		training_labels) 
+  #test model validation at k=i
+  validation_results = 	classifier.score(validation_data, validation_labels)
+  accuracies.append(classifier.score(validation_data, validation_labels))
+
+#graph k
+k_list = range(1,101)
+plt.plot(k_list,accuracies, color= 'red', marker='o', linestyle='dashed')
+plt.xlabel('K')
+plt.ylabel('Validation Accuracy')
+plt.title('Breast Cancer Classifier Accuracy')
+plt.show()
